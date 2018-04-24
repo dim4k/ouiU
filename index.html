@@ -7,15 +7,14 @@
     </head>
     <body>
         <h1>ouiU</h1>
-        <!-- All of the Node.js APIs are available in this renderer process. -->
         <button type="button" id="executeBat" class="btn btn-primary">Execute .bat file</button>
+        <button type="button" id="downloadCemu" class="btn btn-primary">DownloadCemu</button>
         <button type="button" onclick="resetLog()" class="btn btn-warning">Clear log</button><br>
         <ul id="log-container"></ul>
         <script>
             function resetLog(){
                 return document.getElementById("log-container").innerHTML = "";
             }
-            // You can also require other files to run in this process
             require('./renderer.js');
         </script>
     </body>

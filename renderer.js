@@ -1,3 +1,6 @@
+const dl = require('./modules/downloadFile.js');
+const config = require('./config.js');
+
 function addLog(message,type){
     let el = document.getElementById("log-container");
     let newItem = document.createElement("LI");       // Create a <li> node
@@ -10,21 +13,22 @@ function addLog(message,type){
     newItem.appendChild(textnode);                    // Append the text to <li>
     el.appendChild(newItem);
 }
+
 document.getElementById("executeBat").addEventListener("click",function(e){
-    let myBatFilePath = "C:\\Users\\Antoine\\Desktop\\test.bat";
-    const spawn = require('child_process').spawn;
-    const bat = spawn('cmd.exe', ['/c', myBatFilePath]);
-    bat.stdout.on('data', (data) => {
+    const process = require('child_process');
+    let ls = process.spawn('test.bat');
+
+    ls.stdout.on('data', (data) => {
         let str = String.fromCharCode.apply(null, data);
         addLog(data);
         console.info(str);
     });
-    bat.stderr.on('data', (data) => {
+    ls.stderr.on('data', (data) => {
         let str = String.fromCharCode.apply(null, data);
         addLog(data,"error");
         console.error(str);
     });
-    bat.on('exit', (code) => {
+    ls.on('exit', (code) => {
         console.log(`Child exited with code ${code}`);
         let preText = `Child exited with code ${code} : `;
         switch(code){
@@ -42,4 +46,18 @@ document.getElementById("executeBat").addEventListener("click",function(e){
                 break;
         }
     });
+},false);
+
+document.getElementById("downloadCemu").addEventListener("click",function(e) {
+    let fileURL = "http://www.planwallpaper.com/static/images/butterfly-wallpaper.jpeg";
+    // butterfly-wallpaper.jpeg
+    let filename = getFilenameFromUrl(config.cemuUrl);
+
+    function getFilenameFromUrl(url){
+        return url.substring(url.lastIndexOf('/') + 1);
+    }
+
+    let finalPath = config.downloadPath + "\\" + filename;
+
+    dl.downloadFile(fileURL, finalPath);
 },false);

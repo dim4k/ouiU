@@ -1,0 +1,6 @@
+let config = {};
+
+config.downloadPath = "./resources";
+config.cemuUrl = URL.TO.CEMU.ZIP;
+
+module.exports = config;

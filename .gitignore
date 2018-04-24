@@ -1,2 +1,5 @@
 node_modules
 .idea
+resources/*
+!resources/.gitkeep
+config.js
