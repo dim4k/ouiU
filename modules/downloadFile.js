@@ -1,9 +1,11 @@
 const request = require('request');
 const fs = require('fs');
+const events = require('events');
+let eventEmitter = new events.EventEmitter();
 
-module.exports = {downloadFile : downloadFile};
+module.exports = {downloadFile : downloadFile, em : eventEmitter };
 
-function downloadFile(file_url , targetPath){
+function downloadFile(file_url , targetPath, dlPercentage){
     // Save variable to know progress
     let received_bytes = 0;
     let total_bytes = 0;
@@ -25,15 +27,16 @@ function downloadFile(file_url , targetPath){
         // Update the received bytes
         received_bytes += chunk.length;
 
+        dlPercentage = Math.floor((received_bytes * 100) / total_bytes);
+        eventEmitter.emit('dlUpdate', dlPercentage);
         showProgress(received_bytes, total_bytes);
     });
 
     req.on('end', function() {
-        alert("File succesfully downloaded");
+        eventEmitter.emit('dlUpdate', 100);
     });
 }
 
 function showProgress(received,total){
-    let percentage = (received * 100) / total;
-    console.log(percentage + "% | " + received + " bytes out of " + total + " bytes.");
+    let percentage = Math.floor((received * 100) / total);
 }

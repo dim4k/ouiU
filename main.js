@@ -32,11 +32,6 @@ function createWindow () {
         // when you should delete the corresponding element.
         mainWindow = null
     });
-
-    mainWindow.on("download", (event, info) => {
-        download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-            .then(dl => window.webContents.send("download complete", dl.getSavePath()));
-    });
 }
 
 // This method will be called when Electron has finished

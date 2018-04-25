@@ -49,9 +49,8 @@ document.getElementById("executeBat").addEventListener("click",function(e){
 },false);
 
 document.getElementById("downloadCemu").addEventListener("click",function(e) {
-    let fileURL = "http://www.planwallpaper.com/static/images/butterfly-wallpaper.jpeg";
-    // butterfly-wallpaper.jpeg
     let filename = getFilenameFromUrl(config.cemuUrl);
+    let dlProgressBar = document.getElementById("download-pb");
 
     function getFilenameFromUrl(url){
         return url.substring(url.lastIndexOf('/') + 1);
@@ -59,5 +58,28 @@ document.getElementById("downloadCemu").addEventListener("click",function(e) {
 
     let finalPath = config.downloadPath + "\\" + filename;
 
-    dl.downloadFile(fileURL, finalPath);
+    dl.downloadFile(config.cemuUrl, finalPath);
+
+    dl.em.on('dlUpdate', updateProgressBar);
+
 },false);
+
+function updateProgressBar(dlPercentage){
+    let dlProgressBar = document.getElementById("download-pb");
+    let dlButton = document.getElementById("downloadCemu");
+
+    dlProgressBar.setAttribute("aria-valuenow", dlPercentage);
+    dlProgressBar.setAttribute("style", "width : " + dlPercentage + "%;");
+
+    if (dlPercentage === 100){
+        dlProgressBar.closest(".progress").style.display = 'none';
+        dlButton.innerHTML = "Download complete !";
+        dlButton.setAttribute("class", "btn btn-success");
+        dlProgressBar.setAttribute("class", "progress-bar bg-success");
+    } else {
+        dlProgressBar.closest(".progress").style.display = 'flex';
+        dlButton.innerHTML = "Downloading...";
+        dlButton.setAttribute("class", "btn btn-primary");
+        dlProgressBar.setAttribute("class", "progress-bar progress-bar-striped");
+    }
+}
